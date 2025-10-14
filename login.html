@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body class="login-page">
+    
+    <header class="site-header">
+        <nav class="navbar" aria-label="Main">
+            <ul class="navbar-left">
+                <li class="nav-item"><a class="nav-link" href="index.html" >Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html" aria-current="page">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                <li class="nav-item nav-username"><span id="userTag"></span></li>
+            </ul>
+
+            <ul class="navbar-right">
+                <li class="nav-item nav-dark-mode">
+                    <button id="btn-dark-mode" type="button" aria-pressed="false">Dark Mode</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="login-container">
+
+        <div class="loader" id="loader" style="display: none;"></div>
+
+
+        <form class="login-form" id="login-form" novalidate>
+
+            <h2 class="login-title">Login to myBlog</h2>
+ 
+            <label for="username">User Name:</label>
+            <input type="text" id="username" name="username" class="login-input" placeholder="Enter Username" required >
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="login-input" placeholder="Enter E-mail" required>
+          
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" class="login-input" placeholder="Password required" required>   
+
+            <div class="error-message" id="error-message-error"></div>
+
+            <div class="login-button-row">
+                <button type="submit" class="login-button">Login</button>
+                <button type="button" class="register-button" onclick="window.location.href='register.html'">Register</button>
+            </div>
+        
+        </form>       
+            
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Homepage</title>
+    <link rel="stylesheet" href="./main.css">
+  
+</head>
+
+<body>
+
+    <header class="site-header">
+        <nav class="navbar" aria-label="Main">
+            <ul class="navbar-left">
+                <li class="nav-item"><a class="nav-link" href="index.html" aria-current="page">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                <li class="nav-item nav-username"><span id="userTag"></span></li>
+            </ul>
+
+            <ul class="navbar-right">
+                <li class="nav-item nav-dark-mode">
+                    <button id="btn-dark-mode" type="button" aria-pressed="false">Dark Mode</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="cover-container">
+            <h1 class="cover-header">Welcome to my-Blog Website</h1>
+            <p class="cover-title">A platform for sharing and discovering your amazing stories !</p>
+        </div>
+    
+        <img src="./img/myblog-cover.jpg" alt="Myblog-cover-picture" class="cover-center-image">
+    
+    </main>
+    
+        <script src="./script.js"></script>
+    
+</body>
+</html>

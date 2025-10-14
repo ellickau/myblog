@@ -1,0 +1,463 @@
+/* dark mode set up */
+
+:root{
+   /* navbar */
+  --bg: #1799aa;
+  --bg-hover: rgba(255,255,255,0.12);
+  --text: #fff;
+  --btn-bg: #e8e8e8;
+  --btn-text: #222;
+  --page-bg: #fff;
+  --border-form: #555;
+  --space-sm: 8px;
+  --space: 12px;
+  --space-lg: 20px;
+  --radius: 8px;
+  --fz-nav: 2rem;
+  --fz-user: 1.5rem;
+ 
+   /* body content */
+   --body-text: #111;
+   /* card + form */
+  --card-bg: #ceceb7;
+  --blog-bg: #ceceb7;
+  --card-secondary-bg: #cccbbb;
+  --card-text: #222222;
+  --card-border: #e7ebf0;
+  --card-shadow-1: 0 10px 25px rgba(0,0,0,.08);
+  --card-shadow-2: 0 2px 6px rgba(0,0,0,.04);
+  --card-title: #075109;
+  /* inputs */
+  --input-bg: #ffffff;
+  --input-text: #111111;
+  --input-border: #d9dee3;
+  --input-placeholder: #a0a7ae;
+  --focus-ring: rgba(100,180,255,.25); 
+  /* buttons (greens you already use) */
+  --btn-primary: #16a34a;
+  --btn-primary-strong: #075e2b;
+  --btn-secondary-strong: #903cb1;
+  /* animation  */
+  --loader-accent: #1f7aa8; 
+  --loader-track: #000;       
+
+
+}
+
+* { box-sizing: border-box; }
+body { 
+   margin: 0; 
+   font-family: Arial, Helvetica, sans-serif;  
+}
+
+/* Smooth color transitions */
+body, .navbar, .nav-link, .nav-dark-mode button {
+  transition: background-color .2s ease, color .2s ease;
+}
+
+/* Page background uses a variable; default is white */
+body { 
+   background: var(--page-bg, #fff); 
+   color: var(--body-text); 
+}
+
+/* Dark Mode: override variables */
+body.dark {
+   /* navbar */
+  --bg: #0f172a;                    
+  --bg-hover: rgba(255,255,255,0.20);
+  --text: #e6e6e6;
+  --btn-bg: #334155;               
+  --btn-text: #e6e6e6;
+  --page-bg: #112249;               
+  --border-form: #94a3b8;
+   /* body content */
+  --body-text: #94a3b8;
+  /* card + form */
+  --card-bg: #111827;
+  --blog-bg: #111827;          
+  --card-text: #94a3b8;            
+  --card-border: #374151;          
+  --card-shadow-1: 0 10px 25px rgba(0,0,0,.5);
+  --card-shadow-2: 0 2px 6px rgba(0,0,0,.35);
+  --card-title:  #13b418;   
+  /* inputs */
+  --input-bg: #0f172a;         
+  --card-secondary-bg: #0f172a;
+  --input-text: #e5e7eb;
+  --input-border: #4b5563;     
+  --input-placeholder: #9ca3af;
+  --focus-ring: rgba(147,197,253,.35); /* brighter for dark */
+  /* animation */
+  --loader-accent: #7dd3fc;
+  --loader-track:   #cfd8dc;        
+
+}
+
+/* Header / navbar */
+.site-header { 
+   position: sticky;
+   top: 0;
+   z-index: 10000;
+   background: var(--bg);
+   box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+/* ================== */
+/*    Navbar set up   */
+/* ================== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;            
+  background: var(--bg);
+  padding: 10px var(--space) 14px;   
+  gap: var(--space);
+  color: var(--text);
+}
+
+/* left/right groups */
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-lg);
+  list-style: none;
+  margin: 0; 
+  padding: 0;
+  font-size: var(--fz-nav);
+}
+
+/* items */
+.nav-item { display: flex; align-items: flex-end; }
+
+/* links */
+.nav-link {
+  color: var(--text);
+  text-decoration: none;
+  line-height: 1;
+  padding: 10px 10px;   
+  border-radius: 9px;
+}
+.nav-link:hover { background: var(--bg-hover); cursor: pointer;}
+.nav-link:visited {color: var(--text); }
+.nav-link:focus-visible {
+  outline: 2px solid #fff; outline-offset: 2px;
+}
+.nav-link[aria-current="page"] { 
+  background: rgba(255,255,255,0.18);
+  font-weight: bold; 
+}
+
+nav a.disabled {
+  color: lightgrey;
+  pointer-events: none;
+  cursor: defaults;
+  opacity: 0.6;
+  text-decoration: none;
+}
+
+/* nav-username <placeholder> */
+.nav-username span {
+  color: var(--text);
+  line-height: 1;
+  font-size: var(--fz-user);
+  margin-bottom: 12px;
+  margin-left: 30px;    
+}
+
+/* dark mode button */
+.nav-dark-mode button {
+  font-size: 0.8rem;
+  padding: 10px 10px;
+  border: none;
+  margin-bottom: 9px;
+  border-radius: var(--radius);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  cursor: pointer;
+}
+/* button responsive  */
+.nav-dark-mode button:hover { filter: brightness(0.55); }
+.nav-dark-mode button:focus-visible {
+  outline: 2px solid #fff; outline-offset: 2px;
+}
+
+/* Responsive touch */
+@media (max-width: 640px) {
+  .navbar-left, .navbar-right { gap: 12px; font-size: 1.4rem; }
+  .nav-username span { font-size: 1.1rem; margin-left: 12px; }
+}
+
+/* ===================== */
+/* Cover image and title */
+/* ===================== */
+.cover-container {
+   display: flex;
+   flex-direction : column;
+   justify-content: center;
+   align-items: center;
+   margin: 0 auto;
+   gap: 10px;
+}
+
+.cover-header {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--card-title);
+}
+
+.cover-title {
+    text-align: center;
+    font-size: 28px;
+    color: var(--body-text, #666);
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.cover-center-image {
+    display: block;
+    margin: 0 auto;
+    border-radius: 15px;
+    width: min(100%, 1000px);
+    height: auto;
+}
+/* ******************** */
+/* Login Form  */
+/* ******************** */
+.login-container {
+    min-height: 100vh;
+    min-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+/* card */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 70%;
+  max-width: 420px;
+  background: var(--card-bg);
+  color: var(--card-text);
+  padding: 28px 28px 24px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow-1), var(--card-shadow-2);
+}
+
+.login-form > .login-title {
+   text-align: center;
+   color: var(--card-title);
+}
+
+/* labels */
+.login-form label {
+   font-weight: 700;
+   color: var(--card-text);
+   margin-top: 6px;
+}
+
+/* Login */
+.login-input{
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--input-text);
+  outline: none;
+  font-size: 1rem;
+}
+.login-input::placeholder{ color: var(--input-placeholder); }
+.login-input:focus{
+  border-color: #84c5f4;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.login-button-row {
+   display: flex;
+   flex-direction: row;
+   gap: 12px;
+   align-items: center;
+   justify-content: space-between;
+   width: 100%;
+}
+
+.login-button-row > button {
+   flex: 1 1 0;
+   width: 100;
+   padding: 12px 14px;
+   margin-top: 10px;
+   cursor: pointer;
+   border: 1px solid grey;
+   font-size: 1.5rem;
+   transition: filter .15s ease, transform .02s ease;
+}
+
+/* buttons (use your variables; colours look good in both modes) */
+.login-button{
+  background: var(--btn-primary);
+  color:#fff;
+  padding: 10px;
+  border-radius: 10px;
+}
+.register-button{
+  background: var(--btn-primary-strong);
+  color:#fff;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* button responsive */
+.login-button-row button:hover { filter: brightness(0.55); }
+.login-button-row button:focus-visible {
+  outline: 2px solid #fff; outline-offset: 2px;
+}
+
+
+/* ************** */
+/* Register form  */
+/* ************** */
+.register-container {
+    min-height: 100vh;
+    min-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+/* card */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 70%;
+  max-width: 420px;
+  background: var(--card-secondary-bg);
+  color: var(--card-text);
+  /* background: var(--page-bg); */
+  padding: 28px 28px 24px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow-1), var(--card-shadow-2);
+}
+
+
+.register-form > .register-title {
+   text-align: center;
+   color: var(--card-title);
+}
+
+/* labels */
+.register-form label {
+   font-weight: 700;
+   color: var(--card-text);
+   margin-top: 6px;
+}
+
+/* Login */
+.register-input{
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--input-text);
+  outline: none;
+  font-size: 1rem;
+}
+.register-input::placeholder{ color: var(--input-placeholder); }
+.register-input:focus{
+  border-color: #84c5f4;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.reg-button-row {
+   display: flex;
+   flex-direction: row;
+   gap: 12px;
+   align-items: center;
+   justify-content: space-between;
+   width: 100%;
+}
+
+.reg-button-row > button {
+   flex: 1 1 0;
+   width: 100;
+   padding: 12px 14px;
+   margin-top: 10px;
+   cursor: pointer;
+   border: 1px solid grey;
+   font-size: 1.5rem;
+   transition: filter .15s ease, transform .02s ease;
+}
+
+/* buttons  */
+.submit-button{
+  background: var(--btn-secondary-strong);
+  color:#ffffff;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* button responsive */
+.reg-button-row button:hover { filter: brightness(0.55); }
+.reg-button-row button:focus-visible {
+  outline: 2px solid #fff; outline-offset: 2px;
+}
+
+/* ==================================== */
+/* Wallpaper for Login & Register pages */
+/* ==================================== */
+
+/* Common wallpaper style */
+body.login-page,
+body.register-page {
+  background: 
+    linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
+    url("./img/wallpaper_003.jpg") center / cover no-repeat;
+  background-attachment: fixed;
+}
+
+/* slightly darker in dark mode for readability */
+body.dark.login-page,
+body.dark.register-page {
+  background: var(--page-bg, #fff);
+}
+
+/* ================== */
+/*     Animiation     */
+/* ================== */
+
+/* HTML: <div class="loader"></div> */
+.loader, .reg-loader, .new-blog-loader {
+  width: 60px;
+  aspect-ratio: 1;
+  color: var(--loader-track);
+  border: 10px solid var(--loader-track);
+  box-sizing: border-box;
+  border-radius: 50%;
+  animation: l6 2s infinite linear;
+  position: relative;
+  margin: 0 auto 20px;
+}
+
+@keyframes l6 {
+  0%   {background: conic-gradient(var(--loader-accent) 0     ,#0000 0)}
+  25%  {background: conic-gradient(var(--loader-accent) 90deg ,#0000 91deg)}
+  50%  {background: conic-gradient(var(--loader-accent) 180deg,#0000 181deg)}
+  75%  {background: conic-gradient(var(--loader-accent) 270deg,#0000 271deg)}
+  100% {background: conic-gradient(var(--loader-accent) 360deg,#0000 360deg)}
+}

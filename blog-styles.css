@@ -1,0 +1,237 @@
+
+
+/* ======================
+   Blog page (test.html)
+   ====================== */
+
+.blog-title {
+  font-weight: bold; 
+  font-size: 2rem;
+}
+
+/* Wallpaper behind everything; main.css still controls --page-bg etc. */
+html, body { min-height: 100%; }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
+    url("./img/blog-wallpaper.jpg") center / cover no-repeat;
+}
+
+/* Stronger overlay in dark mode for readability */
+body.dark::before {
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    url("./img/blog-wallpaper-dark.png") center / cover no-repeat;
+}
+
+/* Page title uses on-surface text color from main.css */
+.blog-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 20px 16px 8px;
+}
+
+.blog-title h2 {
+  margin: 20px 0;
+  font-size: 3.5rem;
+  color: var(--card-title);                
+}
+
+/* ===================== */
+/*     Blog Page         */
+/* ===================== */
+.blog-container {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 820px;
+  margin: 0 auto 80px;
+  padding: 0 16px 40px;
+  display: grid;
+  gap: 20px;
+}
+
+.blog-message {
+  text-align: center;
+  background-color: var(--blog-bg);
+  padding : 20px;
+  font-size: 40px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Card */
+.blog-post {
+  background: rgba(255,255,255,0.95);
+  color: var(--body-text);            
+  border-radius: 14px;
+  padding: 20px 30px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  backdrop-filter: saturate(120%) blur(1px);
+}
+
+.blog-post > .post-date {
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.post-date .userTag {
+  color: var(--card-title);
+  font-size: 1.4rem;
+  font-weight: bold;
+} 
+
+.blog-post > .post-content {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+/* Dark-mode card adjustment */
+body.dark .blog-post {
+  background: rgba(17,25,40,0.82);
+  color: var(--body-text);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+}
+
+/* Titles, meta, text */
+.blog-post h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 1.2vw + 1rem, 1.6rem);
+  font-weight: 800;
+}
+.post-meta {
+  margin: 0 0 12px;
+  font-size: 0.92rem;
+  color: var(--secondary);           
+}
+.blog-post p { line-height: 1.55; margin: 0 0 10px; }
+
+@media (max-width: 640px) {
+  .blog-container { gap: 14px; padding: 0 12px 28px; }
+  .blog-post { padding: 16px; border-radius: 12px; }
+  .blog-title { padding: 16px 12px 6px; }
+}
+
+/* ===========================
+   New Blog page (test.html)
+   =========================== */
+
+ :root {--nav-h: 64px; }
+
+/* Title (same layout as blog page) */
+.new-blog-title {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.new-blog-title h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.4vw + 1rem, 2.2rem);
+  font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+/* Page container */
+.new-blog-container {
+  min-height: calc(100vh - var(--nav-h));
+  display: flex;
+  align-items: center;         /* vertical center */
+  justify-content: center;     /* horizontal center */
+  padding: 24px 24px;
+}
+
+.new-blog-title > h2 {
+  text-align: center;
+  color: var(--card-title);
+}
+
+/* Form card */
+.new-blog-form {
+  width: 100%;
+  max-width: 860px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  backdrop-filter: saturate(120%) blur(4px);
+  padding: 22px 50px;
+}
+
+/* Dark-mode tweak for the card (optional; variables already flip) */
+body.dark .new-blog-form {
+  background: rgba(17, 25, 40, 0.72);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+/* Labels + inputs */
+.form-label {
+  font-weight: 700;
+  color: var(--body-text);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111111 !important;
+  outline: none;
+  font-size: 1rem;
+}
+.form-input::placeholder { color: var(--input-placeholder); }
+.form-input:focus {
+  border-color: #84c5f4;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Error message */
+#new-blog-errormessage {
+  min-height: 1.25rem;
+  font-size: 0.95rem;
+  color: #b91c1c; /* red-700 */
+}
+
+/* Buttons row */
+.new-button-row {
+  display: flex;
+  justify-content: center;      /* center button */
+  margin-top: 6px;
+}
+
+/* Bigger, comfy Post button */
+.post-button {
+  padding: 12px 50px;           /* wider padding */
+  border: none;
+  border-radius: 10px;         /* pill look (optional) */
+  background: var(--btn-primary);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: filter .15s ease, transform .02s ease;
+}
+.post-button:hover { filter: brightness(.95); }
+.post-button:active { transform: translateY(1px); }
+.post-button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .new-blog-form { padding: 16px; border-radius: 14px; }
+}
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my-Blog</title>
+    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./blog-styles.css">
+</head>
+
+<body>
+    
+    <header class="site-header">
+        <nav class="navbar" aria-label="Main">
+            <ul class="navbar-left">
+                <li class="nav-item"><a class="nav-link" href="index.html" >Home</a></li>
+                <li class="nav-item"><a class="nav-link" id = "logoutLink" href="logout.html" >Logout</a></li>
+                <li class="nav-item"><a class="nav-link" href="addblog.html" >New</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.html" aria-current="page">Blog</a></li>
+                <li class="nav-item nav-username"><span id="userTag"></span></li>
+            </ul>
+
+            <ul class="navbar-right">
+                <li class="nav-item nav-dark-mode">
+                    <button id="btn-dark-mode" type="button" aria-pressed="false">Dark Mode</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="blog-title">
+        <h2 >My Blog</h2>
+        <div class="blog-message" id="blog-message"></div>
+    </div>
+
+    <main class="blog-container" id="blog-container">
+        <!-- <article class="blog-post">
+            <h2 class="post-title"></h2>
+            <p class="post-date"><span id="userTagPost"></span></p>
+            <p class="post-content"></p>    
+        </article> -->
+    </main>     
+
+    <script src="./script.js"></script>
+</body>
+</html>

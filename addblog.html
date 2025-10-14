@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Blog</title>
+    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./blog-styles.css">
+</head>
+
+<body>
+    
+    <header class="site-header">
+        <nav class="navbar" aria-label="Main">
+            <ul class="navbar-left">
+                <li class="nav-item"><a class="nav-link" href="index.html" >Home</a></li>
+                <li class="nav-item"><a class="nav-link" id = "logoutLink" href="logout.html" >Logout</a></li>
+                <li class="nav-item"><a class="nav-link" href="addblog.html" aria-current="page">New</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                <li class="nav-item nav-username"><span id="userTag"></span></li>
+            </ul>
+
+            <ul class="navbar-right">
+                <li class="nav-item nav-dark-mode">
+                    <button id="btn-dark-mode" type="button" aria-pressed="false">Dark Mode</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+
+    <!-- Blog form -->
+    <main class="new-blog-container">
+        
+        <form class="new-blog-form" id="new-blog-form" novalidate>
+
+            <div class="loader new-blog-loader" id="new-blog-loader" style="display:none;"></div>
+
+            <div class="new-blog-title">
+                <h2 >Add New Post</h2>
+            </div>
+         
+            <label for="new-title" class="form-label">Title</label>
+            <input type="text" id="new-blog-title" name="new-title" class="form-input" placeholder ='Title' required>
+                                   
+            <label for="new-content" class="form-label">Content</label>
+            <textarea id="new-blog-content" name="new-content" class="form-input" rows="10" placeholder="Content" required></textarea>
+            
+            <div id="new-blog-errormessage"></div>
+
+            <div class="new-button-row">
+                <button type="submit" class="post-button" >Post</button>
+            </div>
+
+
+        </form>
+
+    </main>
+
+
+
+    <script src="./script.js"></script>
+</body>
+</html>
