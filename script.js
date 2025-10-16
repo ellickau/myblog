@@ -177,9 +177,8 @@ function handleLogin (event) {
 
       // Username not exist
       if (!foundUser){
-        errorMessage.textContent = "User Name not exist. Please sign up";
+        errorMessage.textContent = "Username does not exist. Please sign up";
         errorMessage.style.color = "red"; 
-        loginForm.reset();
         document.getElementById("username").focus();
         return;
       }
@@ -402,7 +401,7 @@ function handleBlogPage(event) {
  
   if (posts.length === 0) {
     posts = [];
-    blogMessage.textContent = "No Blog posts yet";
+    blogMessage.textContent = "No Blog post yet";
     
     const emptyPost = document.querySelector(".blog-post");
     if (emptyPost) emptyPost.style.display = "none"; 
