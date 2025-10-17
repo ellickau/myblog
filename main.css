@@ -440,24 +440,12 @@ body.dark.register-page {
 /* ================== */
 /*     Animiation     */
 /* ================== */
-
-/* HTML: <div class="loader"></div> */
 .loader, .reg-loader, .new-blog-loader {
   width: 60px;
   aspect-ratio: 1;
-  color: var(--loader-track);
   border: 10px solid var(--loader-track);
-  box-sizing: border-box;
   border-radius: 50%;
-  animation: l6 2s infinite linear;
   position: relative;
   margin: 0 auto 20px;
-}
-
-@keyframes l6 {
-  0%   {background: conic-gradient(var(--loader-accent) 0     ,#0000 0)}
-  25%  {background: conic-gradient(var(--loader-accent) 90deg ,#0000 91deg)}
-  50%  {background: conic-gradient(var(--loader-accent) 180deg,#0000 181deg)}
-  75%  {background: conic-gradient(var(--loader-accent) 270deg,#0000 271deg)}
-  100% {background: conic-gradient(var(--loader-accent) 360deg,#0000 360deg)}
+  background: conic-gradient(var(--loader-accent) 0deg, #0000 0deg);
 }

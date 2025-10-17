@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutLink.textContent = "Login";                
       logoutLink.setAttribute("href", "login.html");   
     }
-    // disabled Blog link wehn no username in localStorage
+    // disabled Blog link when no username in localStorage
     if (blogLink) {    
       blogLink.classList.add("disabled");              
       blogLink.addEventListener("click", (e) => e.preventDefault()); 
@@ -95,17 +95,29 @@ document.addEventListener("DOMContentLoaded", () => {
     if (usertag && e) usertag.textContent = `[${e}]`;
   }
 
-  // ===== Logout & Clear LocalStorage ===== //
-  const logout = document.getElementById('logoutLink');
-  
+  // ===== show logout message on index.html ===== //
+  const logoutMsg = localStorage.getItem("logout_message");
+  const header = document.querySelector(".cover-header");
+  const title = document.querySelector(".cover-title");
+
+  if (logoutMsg && header && title) {
+    header.textContent = "You have logged out successfully";
+    title.textContent = logoutMsg;
+    localStorage.removeItem("logout_message");
+  };
+
+  // ===== logout and & redirect ==== //
+  const logout = document.getElementById("logoutLink");
+
   if (logout) {
     logout.addEventListener('click', (event) => {
       event.preventDefault();
+      const u = localStorage.getItem("myblog_username");
+      localStorage.setItem('logout_message',`${u}, thank you for using my-Blog, see you next time!` );
       localStorage.removeItem("myblog_username");
-      window.location.href = "index.html";
-    })
+      window.location.href ="index.html";
+    });
   }
-
 });
 
 // ------------------------ //
@@ -197,14 +209,17 @@ function handleLogin (event) {
     // Save username to localStorage //
     localStorage.setItem('myblog_username', username);
 
-    // anmination place here //
+    //anmination place here //
     loader.style.display = "block";
     loginForm.style.opacity ="0.5";
+    
+    animateLoaders();
 
     setTimeout( () => {
       if (loader) loader.style.display = "none";
       window.location.href = "blog.html";
     }, 3000);
+
  
   };
 
@@ -307,11 +322,12 @@ function handleRegister(event)  {
     errorMessage.textContent = "Account created successfully.";
     errorMessage.style.color = "green";
   }
-  
 
   // anmination place here //
   loader.style.display = "block";
   registerForm.style.opacity ="0.5";
+
+  animateLoaders();
 
   setTimeout( () => {
     if (loader) loader.style.display = "none";
@@ -366,6 +382,8 @@ function handleNewBlog(event)  {
     
     loader.style.display = "block";
     newBlogForm.style.opacity = "0.9";
+
+    animateLoaders();
     
     setTimeout( () => {
       if (loader) loader.style.display = "none";
@@ -437,4 +455,27 @@ function handleBlogPage(event) {
     
 };
 
+// =============================== //
+// Animate loaders (JS replacement)
+// =============================== //
+function animateLoaders() {
+  const loaders = document.querySelectorAll('.loader, .reg-loader, .new-blog-loader');
+  if (!loaders.length) return;
 
+  let startTime = null;
+
+  function spin(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+
+    // Full rotation every 2000ms
+    const rotation = (elapsed / 2000) * 360;
+
+    loaders.forEach(loader => {
+      const angle = rotation % 360;
+      loader.style.background = `conic-gradient(var(--loader-accent) ${angle}deg, #0000 ${angle}deg)`;
+    });
+    requestAnimationFrame(spin);
+  }
+  requestAnimationFrame(spin);
+}
