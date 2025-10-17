@@ -456,7 +456,7 @@ function handleBlogPage(event) {
 };
 
 // =============================== //
-// Animate loaders (JS replacement)
+// Animate loaders by JavaScript   //
 // =============================== //
 function animateLoaders() {
   const loaders = document.querySelectorAll('.loader, .reg-loader, .new-blog-loader');
