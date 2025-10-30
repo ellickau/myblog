@@ -1,14 +1,14 @@
 <h1>myBlog – Simple LocalStorage Blog App</h1>
 <p>myBlog is a front-end web application built using HTML, CSS, and JavaScript that allows users to register, log in, and create, edit, or delete personal blog posts — all stored locally in the browser via local PC localStorage.</p>
 <p>Author: Ellick Au</p>
-<p>Built as part of the myBlog learning project for the course of "L3 Software Development"(HTML/CSS/JS).</p>\
+<p>Built as part of the myBlog learning project for the course of "L3 Software Development"(HTML/CSS/JS).</p>
 <p>Date: 30 Oct 2025</p>
 
 
 <h3>🚀 Features</h3>
 <ul>
   <li>🌓 Dark / Light mode toggle (state saved in localStorage)</li>
-  <li>👤 User authentication (login/register / logout)</li>
+  <li>👤 User authentication (login/register/logout)</li>
   <li>💾 All data saved locally (no server required)</li>
   <li>🔍 Auto-load personal posts only on blog.html</li>
   <li>🌀 Loader animation with graceful start/stop</li>
@@ -36,14 +36,14 @@
   <li>Only the current user’s posts are shown in blog.html.</li>
 </ul>
 
-<br>
+<hr>
 
-<h3🔒 Security Note</h3>
+<h3>🔒 Security Note</h3>
 <p>This is a client-side demo app — passwords and data are saved in localStorage, not encrypted.</p>
 <p>Do not use real passwords or sensitive data.</p>
 <p>In production, you would replace the storage layer with a secure backend (e.g. Flask, Node.js, or Firebase).</p>
 
-<br>
+<hr>
 
 <h3>💡 Future Improvements</h3>
 <ul>
