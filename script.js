@@ -11,7 +11,13 @@ function applyTheme(isDark) {
   if (!btn) return;
   document.body.classList.toggle(CLASS, isDark);
   btn.setAttribute('aria-pressed', String(isDark));
-  btn.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  
+  const iconSun = "<img src='./img/sun-fill.svg'>";
+  const iconMoon = "<img src='./img/moon-fill.svg'>";
+
+  if (isDark) btn.innerHTML = iconSun;
+    else btn.innerHTML = iconMoon;
+
   localStorage.setItem(KEY, isDark ? DARK : 'light');
 }
 
@@ -19,12 +25,12 @@ function initTheme() {
   const btn = document.getElementById('btn-dark-mode');
   if (!btn) return;
 
-  // Initialize them, default by light mode
+  // Initialize them, default by light mode //
   const saved = localStorage.getItem(KEY);
   const isDark = saved ? saved === DARK : false;
   applyTheme(isDark);
 
-  // Toggle when button is clicked
+  // Toggle when button is clicked //
   btn.addEventListener('click', () => {
     const newIsDark = !document.body.classList.contains(CLASS);
     applyTheme(newIsDark);
@@ -39,26 +45,37 @@ document.addEventListener("DOMContentLoaded", initTheme);
 // ================================================== // 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Except handling if no username in myblog_username //
-  const username = localStorage.getItem('myblog_username');
-  const logoutLink = document.getElementById('logoutLink');
+  // ===== logout and & redirect ==== //
+  const authLink = document.getElementById("authLink");
+  const username = localStorage.getItem("myblog_username");
   const blogLink = document.querySelector('a[href="blog.html"]');
 
-  // if no username, adjust navbar
-  if (!username) { 
-    // change logout to login when no uername in localStorage
-    if (logoutLink) {  
-      logoutLink.removeAttribute("id");                
-      logoutLink.textContent = "Login";                
-      logoutLink.setAttribute("href", "login.html");   
-    }
-    // disabled Blog link when no username in localStorage
-    if (blogLink) {    
-      blogLink.classList.add("disabled");              
-      blogLink.addEventListener("click", (e) => e.preventDefault()); 
+  if (authLink) {
+    if (username) {
+      // User is logged in, show Logout
+      authLink.textContent = "Logout";
+      authLink.setAttribute("href", "#"); // prevent direct reload
+      authLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.setItem('logout_message', `${username}, thank you for using my-Blog, see you next time!`);
+        localStorage.removeItem("myblog_username");
+        window.location.href = "index.html";
+      });
+    } else {
+      // Not logged in, show Login
+      authLink.textContent = "Login";
+      authLink.setAttribute("href", "login.html");
     }
   }
-  
+
+  // ===== Disable Blog link when not logged in ===== //
+  if (blogLink && !username) {
+    blogLink.classList.add("disabled");
+    blogLink.removeAttribute("href"); 
+  }
+
+
+
   // ===== Login Form ===== //
   const loginForm = document.getElementById("login-form");
   
@@ -106,19 +123,73 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("logout_message");
   };
 
-  // ===== logout and & redirect ==== //
-  const logout = document.getElementById("logoutLink");
+  // ==== Click on Eidit icon === //
+  const editPosts = document.querySelectorAll(".blog-edit-icon");
 
-  if (logout) {
-    logout.addEventListener('click', (event) => {
-      event.preventDefault();
-      const u = localStorage.getItem("myblog_username");
-      localStorage.setItem('logout_message',`${u}, thank you for using my-Blog, see you next time!` );
-      localStorage.removeItem("myblog_username");
-      window.location.href ="index.html";
+  editPosts.forEach((icon) => {
+    icon.addEventListener("click", (e) => {
+      const article = e.target.closest(".blog-post"); 
+      if (!article) return;
+
+      const postId = article.dataset.id;
+      const currentUser = localStorage.getItem("myblog_username");
+      
+      localStorage.setItem("pendingEdit", JSON.stringify({
+        id: postId,
+        user: currentUser,
+        ts: Date.now()
+      }));
+      window.location.href = "editblog.html";
     });
+  });
+
+  // ===== redirect to edit Blog page ==== // 
+  const editblog = document.querySelector(".edit-blog-container");
+
+  if (editblog) {
+    editPostedBlog();
   }
+
+
+  // ==== blog Delete === //
+  const deletePosts = document.querySelectorAll(".blog-delete-icon");
+
+  deletePosts.forEach((icon) => {
+    icon.addEventListener("click", (e) => {
+      const article = e.target.closest(".blog-post"); 
+      if (!article) return;
+
+      const postId = article.dataset.id;
+      // alert(`Delete icon pressed for post ${postId}`);
+      const currentUser = localStorage.getItem("myblog_username");
+      if (currentUser) deletePostedBlog(postId, currentUser);
+
+    });
+  });
+
 });
+
+//================================//
+// load Posts from Local Storage //
+function loadPosts() {
+  return JSON.parse(localStorage.getItem("blogPosts") || "[]");
+};
+
+//================================//
+// Save Posts from Local Storage //
+function savePosts(posts) {
+   localStorage.setItem("blogPosts", JSON.stringify(posts));
+   return;
+};
+
+//=======================================//
+// Get PostId and save in LocalStorage   //
+function getNextPostID() {
+  let nextId = Number(localStorage.getItem("blogPosts_nextId") || 0);
+  nextId++;
+  localStorage.setItem("blogPosts_nextId", nextId);
+  return nextId;
+};
 
 // ------------------------ //
 // Validation on Login Page //
@@ -135,7 +206,7 @@ function handleLogin (event) {
     const loader = document.getElementById('loader');  
   
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPattern = /^(?=.*[A-Z])(?=.*[\W_]).{6,}$/;
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*()\-+={}[\]:;"'<>,.?/~`]).{6,}$/;
 
     errorMessage.textContent = '';
     errorMessage.style.color = 'red';
@@ -149,8 +220,6 @@ function handleLogin (event) {
     } 
 
     // validate username, more than 4 characters
-    // convert the username to lowecase
-    // check with db if username exsits ( to be udpated)
     if (username.length < 4) {
       errorMessage.textContent = "Username is less than 4 characters"
       return;
@@ -166,11 +235,10 @@ function handleLogin (event) {
         return;
     } 
     
-    // validate password - contains min 1 upper case , 1 symbol and character
     // check on db and replace by checking if password matched !
     if (!passwordPattern.test(password)) {
         event.preventDefault();
-        errorMessage.textContent= "Password contains min 1 upper case , 1 symbol and character";
+        errorMessage.textContent= "Password must be min 6 characters, contains at least 1 uppercase & 1 symbol";
         return;
     }
     // Check on username, email and password matchs with users_profile 
@@ -213,16 +281,15 @@ function handleLogin (event) {
     loader.style.display = "block";
     loginForm.style.opacity ="0.5";
     
-    animateLoaders();
+    animateLoadersStart();
 
     setTimeout( () => {
+      animateLoadersStop();
       if (loader) loader.style.display = "none";
       window.location.href = "blog.html";
-    }, 3000);
+    }, 2000);
 
- 
   };
-
 
 // --------------------------- //
 // Validation on Sign up Page //
@@ -240,7 +307,7 @@ function handleRegister(event)  {
   const loader = document.getElementById('reg-loader');
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordPattern = /^(?=.*[A-Z])(?=.*[\W_]).{6,}$/;
+  const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*()\-+={}[\]:;"'<>,.?/~`]).{6,}$/;
 
   errorMessage.textContent = '';
   errorMessage.style.color = 'red';
@@ -278,7 +345,7 @@ function handleRegister(event)  {
   // check on db and replace by checking if password matched !
   if (!passwordPattern.test(password)) {
       event.preventDefault();
-      errorMessage.textContent= "Password contains min 1 upper case , 1 symbol and character";
+      errorMessage.textContent= "Password must be min 6 characters, contains at least 1 uppercase & 1 symbol";
       return;
   }
 
@@ -327,18 +394,18 @@ function handleRegister(event)  {
   loader.style.display = "block";
   registerForm.style.opacity ="0.5";
 
-  animateLoaders();
+  animateLoadersStart();
 
-  setTimeout( () => {
-    if (loader) loader.style.display = "none";
-    window.location.href = "login.html";
-  }, 3000);
+    setTimeout( () => {
+      animateLoadersStop();
+      if (loader) loader.style.display = "none";
+      window.location.href = "blog.html";
+    }, 2000);
 };
 
-
-// =========================== //
-//       Handle New Blog       //
-// =========================== //
+// ====================== //
+//   Handle New Blog      //
+// ====================== //
 function handleNewBlog(event)  {
 
   event.preventDefault();
@@ -358,7 +425,6 @@ function handleNewBlog(event)  {
         errorMessage.textContent = "Please fill in all fields!";
         return;
   }
-
       
   const username = localStorage.getItem("myblog_username");
 
@@ -366,16 +432,18 @@ function handleNewBlog(event)  {
   
     // create a post object //
     const post = {
+      postId: getNextPostID(),    // new added
+      postHidden: false,          // new added
       username,
       title,
       content,
-      date: new Date().toLocaleDateString()
+      date: new Date().toLocaleString()
     };
 
     // retirieve blogPosts and add new Post to LocalStorage
-    let posts = JSON.parse(localStorage.getItem("blogPosts") || "[]");
+    let posts = loadPosts();
     posts.push(post);
-    localStorage.setItem("blogPosts", JSON.stringify(posts));
+    savePosts(posts);
 
     errorMessage.textContent = "Blog Saved & Posted";
     errorMessage.style.color = "green";
@@ -383,14 +451,13 @@ function handleNewBlog(event)  {
     loader.style.display = "block";
     newBlogForm.style.opacity = "0.9";
 
-    animateLoaders();
-    
-    setTimeout( () => {
-      if (loader) loader.style.display = "none";
-      newBlogForm.reset();
-      window.location.href ="blog.html";
+    animateLoadersStart();
 
-    }, 3000);
+    setTimeout( () => {
+      animateLoadersStop();
+      if (loader) loader.style.display = "none";
+      window.location.href = "blog.html";
+    }, 2000);
 
   } else
   {
@@ -401,9 +468,9 @@ function handleNewBlog(event)  {
 };
 
 // ===================== //
-//   handle Blog Page    //
+//   Handle Blog Page    //
 // ===================== //
-function handleBlogPage(event) {
+function handleBlogPage() {
 
   const blogContainer = document.getElementById("blog-container");
   const blogMessage = document.getElementById("blog-message");
@@ -414,24 +481,32 @@ function handleBlogPage(event) {
   // Clear rendered posts to prevent duplicates.
   blogContainer.innerHTML = "";
 
-  let allPosts  = JSON.parse(localStorage.getItem("blogPosts") || "[]");
-  let posts = allPosts.filter(post => post.username === currentUser);
+  // check if User not logged in
+  if (!currentUser) {
+    if (blogMessage) blogMessage.textContent = "Please log in to view your posts.";
+    return;
+  }
+
+  const allPosts  = loadPosts();
+  const posts = allPosts.filter(post => post.username === currentUser && !post.postHidden);
  
   if (posts.length === 0) {
-    posts = [];
-    blogMessage.textContent = "No Blog post yet";
-    
-    const emptyPost = document.querySelector(".blog-post");
-    if (emptyPost) emptyPost.style.display = "none"; 
-    return;
-    
+    if (blogMessage) {
+       blogMessage.textContent = "No Blog Post yet !";
+       blogMessage.style.backgroundColor = "transparent";  
+       blogMessage.style.color = "white"; 
+    }
+    // const emptyPost = document.querySelector(".blog-post");
+    // if (emptyPost) emptyPost.style.display = "none"; 
+    return;    
   };
 
-  blogMessage.style.backgroundColor = "transparent";
-
-  posts.forEach(function(post) {
+  blogMessage.style.backgroundColor = "transparent";  
+  
+  posts.forEach((post)=> {
     const article = document.createElement("article");
     article.className ="blog-post";
+    article.dataset.id = post.postId; // keep the data-id for edit/delete action
 
     const h2 = document.createElement("h2");
     h2.className = "post-title";
@@ -445,10 +520,23 @@ function handleBlogPage(event) {
     content.className = "post-content";
     content.textContent = post.content;
 
+    const line = document.createElement("hr");
+
+    const iconEdit = document.createElement("img");
+    iconEdit.className = "blog-edit-icon";
+    iconEdit.setAttribute("src", "./img/edit-com.svg");
+
+    const iconDelete = document.createElement("img");
+    iconDelete.className = "blog-delete-icon";
+    iconDelete.setAttribute("src", "./img/cross-com.svg");
+    
     article.appendChild(h2);
     article.appendChild(date);
     article.appendChild(content);
-    
+    article.appendChild(line);
+    article.appendChild(iconEdit);
+    article.appendChild(iconDelete);
+       
     blogContainer.appendChild(article);
         
   });
@@ -456,26 +544,135 @@ function handleBlogPage(event) {
 };
 
 // =============================== //
+//      Edit Posted Blog           //
+// =============================== //
+function editPostedBlog() {
+
+  const pending = JSON.parse(localStorage.getItem("pendingEdit") || "null");
+  if (!pending || !pending.id || !pending.user) {
+    // alert("Missing blog post information.");
+    window.location.href = "blog.html";
+    return;
+  }
+
+  const posts = loadPosts();
+  const post = posts.find(p => Number(p.postId) === Number(pending.id) && p.username === pending.user);
+  if (!post) {
+    alert("Post not found or not owned by current user.");
+    window.location.href = "blog.html";
+    return;
+  }
+
+  // Grab elements AFTER they exist in DOM
+  const titleInput   = document.getElementById("edit-blog-title");
+  const contentInput = document.getElementById("edit-blog-content");
+  const form         = document.getElementById("edit-blog-form");
+  const msg          = document.getElementById("edit-blog-errormessage");
+  const loader       = document.getElementById("edit-blog-loader");
+
+  // Prefill the selected Post details
+  titleInput.value   = post.title;
+  contentInput.value = post.content;
+
+  const originalTitle = post.title;
+  const originalContent = post.content;
+
+  // Handle submission
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const newTitle = titleInput.value.trim();
+    const newContent = contentInput.value.trim();
+
+    if (newTitle === originalTitle && newContent === originalContent) {
+      msg.textContent = "No changes made. Click 'Blog' back to your Posts.";
+      msg.style.color = "red";
+      return;
+    }
+
+    post.title = newTitle;
+    post.content = newContent;
+    post.date = new Date().toLocaleString();
+
+    const updatedPosts = posts.map(p => Number(p.postId) ===Number(pending.id) ? post : p);
+    savePosts(updatedPosts);
+
+    msg.textContent = "Edited successfully and posted!";
+    msg.style.color = "green";
+    loader.style.display = "block";
+   
+
+    localStorage.removeItem("pendingEdit");
+    
+    animateLoadersStart();
+
+    setTimeout( () => {
+      animateLoadersStop();
+      if (loader) loader.style.display = "none";
+      window.location.href = "blog.html";
+    }, 2000);
+
+  });
+
+};
+
+// =============================== //
+//      Delete Posted Blog Post    //
+// =============================== //
+
+function deletePostedBlog(postid, currentuser) {
+  const posts = loadPosts();
+  const post = posts.find(p => Number(p.postId) === Number(postid) && p.username === currentuser);
+  if (!post) {
+    // alert("Post not found or not owned by current user.");
+    return;
+  }
+
+  // Confirm before hiding
+  const confirmDelete = confirm(`Are you sure you want to delete "${post.title}"?`);
+  if (!confirmDelete) return;
+
+  post.postHidden = true;
+  savePosts(posts); 
+  handleBlogPage();
+
+};
+
+
+// =============================== //
 // Animate loaders by JavaScript   //
 // =============================== //
-function animateLoaders() {
-  const loaders = document.querySelectorAll('.loader, .reg-loader, .new-blog-loader');
+let loaderRafId = null;
+
+function animateLoadersStart() {
+  if (loaderRafId) return;
+  const loaders = document.querySelectorAll('.loader, .reg-loader, .new-blog-loader, .edit-blog-loader');
   if (!loaders.length) return;
 
   let startTime = null;
 
   function spin(timestamp) {
+
+    const visible = Array.from(loaders).filter(el => getComputedStyle(el).display !== 'none');
+    if (visible.length === 0) { animateLoadersStop(); return; }
+
     if (!startTime) startTime = timestamp;
     const elapsed = timestamp - startTime;
-
-    // Full rotation every 2000ms
     const rotation = (elapsed / 2000) * 360;
 
-    loaders.forEach(loader => {
+    visible.forEach(loader => {
       const angle = rotation % 360;
-      loader.style.background = `conic-gradient(var(--loader-accent) ${angle}deg, #0000 ${angle}deg)`;
+      loader.style.background = `conic-gradient(var(--loader-accent) ${angle}deg, #0000 ${angle}deg )`;
     });
     requestAnimationFrame(spin);
   }
   requestAnimationFrame(spin);
+
+}
+
+function animateLoadersStop() {
+  if (loaderRafId) {
+    cancelAnimationFrame(loaderRafId);
+    loaderRafId = null;
+  }
 }

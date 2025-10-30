@@ -67,7 +67,7 @@ body.dark {
   --bg: #0f172a;                    
   --bg-hover: rgba(255,255,255,0.20);
   --text: #e6e6e6;
-  --btn-bg: #334155;               
+  --btn-bg: #94afd4;               
   --btn-text: #e6e6e6;
   --page-bg: #112249;               
   --border-form: #94a3b8;
@@ -172,7 +172,8 @@ nav a.disabled {
   padding: 10px 10px;
   border: none;
   margin-bottom: 9px;
-  border-radius: var(--radius);
+  margin-right: 10px;
+  border-radius: 50%;  /* var(--radius) */
   background: var(--btn-bg);
   color: var(--btn-text);
   cursor: pointer;
@@ -322,7 +323,6 @@ nav a.disabled {
   outline: 2px solid #fff; outline-offset: 2px;
 }
 
-
 /* ************** */
 /* Register form  */
 /* ************** */
@@ -440,7 +440,7 @@ body.dark.register-page {
 /* ================== */
 /*     Animiation     */
 /* ================== */
-.loader, .reg-loader, .new-blog-loader {
+.loader, .reg-loader, .new-blog-loader, .edit-blog-loader {
   width: 60px;
   aspect-ratio: 1;
   border: 10px solid var(--loader-track);

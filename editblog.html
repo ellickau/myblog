@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Blog</title>
+    <title>Edit Blog</title>
     <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="./blog-styles.css">
 </head>
@@ -15,7 +15,7 @@
             <ul class="navbar-left">
                 <li class="nav-item"><a class="nav-link" href="index.html" >Home</a></li>
                 <li class="nav-item"><a class="nav-link" id = "authLink" href="logout.html" >Logout</a></li>
-                <li class="nav-item"><a class="nav-link" href="addblog.html" aria-current="page">New</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" aria-current="page">Edit</a></li>
                 <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                 <li class="nav-item nav-username"><span id="userTag"></span></li>
             </ul>
@@ -31,25 +31,25 @@
 
 
     <!-- Blog form -->
-    <main class="new-blog-container">
+    <main class="edit-blog-container">
         
-        <form class="new-blog-form" id="new-blog-form" novalidate>
+        <form class="edit-blog-form" id="edit-blog-form" novalidate>
 
-            <div class="loader new-blog-loader" id="new-blog-loader" style="display:none;"></div>
+            <div class="loader edit-blog-loader" id="edit-blog-loader" style="display:none;"></div>
 
-            <div class="new-blog-title">
-                <h2 >Add New Post</h2>
+            <div class="edit-blog-title">
+                <h2 >Editing Your Post</h2>
             </div>
          
-            <label for="new-title" class="form-label">Title</label>
-            <input type="text" id="new-blog-title" name="new-title" class="form-input" placeholder ='Title' required>
+            <label for="edit-title" class="edit-form-label">Title</label>
+            <input type="text" id="edit-blog-title" name="edit-title" class="form-input" placeholder ='Title' required>
                                    
-            <label for="new-content" class="form-label">Content</label>
-            <textarea id="new-blog-content" name="new-content" class="form-input" rows="10" placeholder="Content" required></textarea>
+            <label for="edit-content" class="edit-form-label">Content</label>
+            <textarea id="edit-blog-content" name="edit-content" class="form-input" rows="10" placeholder="Content" required></textarea>
             
-            <div id="new-blog-errormessage"></div>
+            <div id="edit-blog-errormessage"></div>
 
-            <div class="new-button-row">
+            <div class="edit-button-row">
                 <button type="submit" class="post-button" >Post</button>
             </div>
 

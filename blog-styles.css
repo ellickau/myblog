@@ -129,13 +129,13 @@ body.dark .blog-post {
  :root {--nav-h: 64px; }
 
 /* Title (same layout as blog page) */
-.new-blog-title {
+.new-blog-title, .edit-blog-title {
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
 }
 
-.new-blog-title h2 {
+.new-blog-title h2, .edit-blog-title > h2 {
   margin: 0;
   font-size: clamp(1.8rem, 2.4vw + 1rem, 2.2rem);
   font-weight: 800;
@@ -144,7 +144,7 @@ body.dark .blog-post {
 }
 
 /* Page container */
-.new-blog-container {
+.new-blog-container, .edit-blog-container {
   min-height: calc(100vh - var(--nav-h));
   display: flex;
   align-items: center;         /* vertical center */
@@ -152,13 +152,13 @@ body.dark .blog-post {
   padding: 24px 24px;
 }
 
-.new-blog-title > h2 {
+.new-blog-title, .edit-blog-title > h2 {
   text-align: center;
   color: var(--card-title);
 }
 
 /* Form card */
-.new-blog-form {
+.new-blog-form, .edit-blog-form {
   width: 100%;
   max-width: 860px;
   display: grid;
@@ -173,15 +173,16 @@ body.dark .blog-post {
 }
 
 /* Dark-mode tweak for the card (optional; variables already flip) */
-body.dark .new-blog-form {
+body.dark .new-blog-form .edit-blog-form{
   background: rgba(17, 25, 40, 0.72);
   border-color: rgba(255,255,255,0.08);
   box-shadow: 0 12px 32px rgba(0,0,0,0.4);
 }
 
 /* Labels + inputs */
-.form-label {
+.form-label, .edit-form-label {
   font-weight: 700;
+  font-size: 1.5rem;
   color: var(--body-text);
 }
 
@@ -202,14 +203,14 @@ body.dark .new-blog-form {
 }
 
 /* Error message */
-#new-blog-errormessage {
+#new-blog-errormessage, #edit-blog-errormessage {
   min-height: 1.25rem;
   font-size: 0.95rem;
   color: #b91c1c; /* red-700 */
 }
 
 /* Buttons row */
-.new-button-row {
+.new-button-row, .edit-button-row {
   display: flex;
   justify-content: center;      /* center button */
   margin-top: 6px;
@@ -232,6 +233,35 @@ body.dark .new-blog-form {
 
 /* Responsive tweaks */
 @media (max-width: 640px) {
-  .new-blog-form { padding: 16px; border-radius: 14px; }
+  .new-blog-form, .edit-blog-form { padding: 16px; border-radius: 14px; }
 }
+
+
+/* Edit & Delete icon */
+
+
+/* Shared base style */
+.blog-edit-icon,
+.blog-delete-icon {
+  width: 7%;
+  height: auto;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* ===== Hover effects (light mode) ===== */
+.blog-edit-icon:hover,
+.blog-delete-icon:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+/* Specific filters for each icon */
+.blog-edit-icon {
+  filter: brightness(1.1) saturate(1.2);
+}
+.blog-delete-icon {
+  filter: hue-rotate(0deg) brightness(0.9);
+}
+
 
