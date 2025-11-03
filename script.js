@@ -420,6 +420,7 @@ function handleNewBlog(event)  {
         return;
   };
 
+   // Title length cannot be longer than 128 Chars  //
   if (title.length > 128) {
       event.preventDefault();
       errorMessage.textContent = "Title cannot be more than 128 characters";
@@ -594,6 +595,20 @@ function editPostedBlog() {
       localStorage.removeItem("pendingEdit");
       return;
     }
+
+    // valide all the info are non-empty //
+    if (!newTitle || !newContent ) { 
+          e.preventDefault();  
+          msg.textContent = "Please fill in all fields!";
+          return;
+    };
+
+    // Title length cannot be longer than 128 Chars  //
+    if (newTitle.length > 128) {
+        e.preventDefault();
+        msg.textContent = "Title cannot be more than 128 characters";
+        return;
+    };
 
     post.title = newTitle;
     post.content = newContent;
