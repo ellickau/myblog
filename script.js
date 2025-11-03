@@ -74,8 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
     blogLink.removeAttribute("href"); 
   }
 
-
-
   // ===== Login Form ===== //
   const loginForm = document.getElementById("login-form");
   
@@ -97,13 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
     newBlogForm.addEventListener("submit", handleNewBlog);
   }
 
-  // =====  Blog Page ====== //
-  const blogContainer = document.getElementById("blog-container");
-
-  if (blogContainer) {
-    handleBlogPage();
-  }
-
   // ===== UserTag handler ===== //
   const usertag = document.getElementById("userTag");
   
@@ -123,49 +114,52 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("logout_message");
   };
 
-  // ==== Click on Eidit icon === //
-  const editPosts = document.querySelectorAll(".blog-edit-icon");
+  // === handle print, edit and delete in Blog.html === //
+  const blogContainer = document.getElementById("blog-container");
+  
+  if (blogContainer) {
+    handleBlogPage();
 
-  editPosts.forEach((icon) => {
-    icon.addEventListener("click", (e) => {
-      const article = e.target.closest(".blog-post"); 
+    blogContainer.addEventListener('click', (e) => {
+      const article = e.target.closest('.blog-post'); 
       if (!article) return;
 
-      const postId = article.dataset.id;
-      const currentUser = localStorage.getItem("myblog_username");
-      
-      localStorage.setItem("pendingEdit", JSON.stringify({
-        id: postId,
-        user: currentUser,
-        ts: Date.now()
-      }));
-      window.location.href = "editblog.html";
+      // EDIT first
+      if (e.target.closest('.blog-edit-icon')) {
+          const postId = article.dataset.id;
+          const currentUser = localStorage.getItem('myblog_username');
+          // guard: must have user & id
+          if (!postId || !currentUser) return;
+
+          const payload = { id: postId, user: currentUser, ts: Date.now() };
+          localStorage.setItem('pendingEdit', JSON.stringify(payload));
+          console.log('edit → pendingEdit =', payload);
+
+          window.location.href = 'editblog.html';
+          return;
+      }
+
+      // DELETE
+      if (e.target.closest('.blog-delete-icon')) {
+        const postId = article.dataset.id;
+        const currentUser = localStorage.getItem('myblog_username');
+        if (currentUser) deletePostedBlog(postId, currentUser);
+        return;
+      }
+
+      // TITLE → print
+      if (e.target.closest('.post-title')) {
+        printSinglePost(article);
+        return;
+      }
     });
-  });
+  }
 
-  // ===== redirect to edit Blog page ==== // 
+  // === Edit Posted Blog === //
   const editblog = document.querySelector(".edit-blog-container");
-
   if (editblog) {
     editPostedBlog();
   }
-
-
-  // ==== blog Delete === //
-  const deletePosts = document.querySelectorAll(".blog-delete-icon");
-
-  deletePosts.forEach((icon) => {
-    icon.addEventListener("click", (e) => {
-      const article = e.target.closest(".blog-post"); 
-      if (!article) return;
-
-      const postId = article.dataset.id;
-      // alert(`Delete icon pressed for post ${postId}`);
-      const currentUser = localStorage.getItem("myblog_username");
-      if (currentUser) deletePostedBlog(postId, currentUser);
-
-    });
-  });
 
 });
 
@@ -424,8 +418,14 @@ function handleNewBlog(event)  {
         event.preventDefault();  
         errorMessage.textContent = "Please fill in all fields!";
         return;
-  }
-      
+  };
+
+  if (title.length > 128) {
+      event.preventDefault();
+      errorMessage.textContent = "Title cannot be more than 128 characters";
+      return;
+  };
+
   const username = localStorage.getItem("myblog_username");
 
   if (username) {
@@ -491,14 +491,18 @@ function handleBlogPage() {
   const posts = allPosts.filter(post => post.username === currentUser && !post.postHidden);
  
   if (posts.length === 0) {
+
     if (blogMessage) {
        blogMessage.textContent = "No Blog Post yet !";
        blogMessage.style.backgroundColor = "transparent";  
        blogMessage.style.color = "white"; 
-    }
-    // const emptyPost = document.querySelector(".blog-post");
-    // if (emptyPost) emptyPost.style.display = "none"; 
+    }   
+   
+    // usage of document.write() //
+    const msg = "Why not create your first blog ?";
+    popUpWindow(msg);
     return;    
+  
   };
 
   blogMessage.style.backgroundColor = "transparent";  
@@ -506,7 +510,7 @@ function handleBlogPage() {
   posts.forEach((post)=> {
     const article = document.createElement("article");
     article.className ="blog-post";
-    article.dataset.id = post.postId; // keep the data-id for edit/delete action
+    article.dataset.id = post.postId;
 
     const h2 = document.createElement("h2");
     h2.className = "post-title";
@@ -543,9 +547,9 @@ function handleBlogPage() {
     
 };
 
-// =============================== //
-//      Edit Posted Blog           //
-// =============================== //
+// ====================== //
+//   Edit Posted Blog     //
+// ====================== //
 function editPostedBlog() {
 
   const pending = JSON.parse(localStorage.getItem("pendingEdit") || "null");
@@ -616,10 +620,9 @@ function editPostedBlog() {
 
 };
 
-// =============================== //
-//      Delete Posted Blog Post    //
-// =============================== //
-
+// =========================== //
+//  Delete Posted Blog Post    //
+// =========================== //
 function deletePostedBlog(postid, currentuser) {
   const posts = loadPosts();
   const post = posts.find(p => Number(p.postId) === Number(postid) && p.username === currentuser);
@@ -638,12 +641,11 @@ function deletePostedBlog(postid, currentuser) {
 
 };
 
+let loaderRafId = null;
 
 // =============================== //
 // Animate loaders by JavaScript   //
 // =============================== //
-let loaderRafId = null;
-
 function animateLoadersStart() {
   if (loaderRafId) return;
   const loaders = document.querySelectorAll('.loader, .reg-loader, .new-blog-loader, .edit-blog-loader');
@@ -675,4 +677,130 @@ function animateLoadersStop() {
     cancelAnimationFrame(loaderRafId);
     loaderRafId = null;
   }
+}
+
+// =========================================================//
+// Document write function for displaying message in window //
+// =========================================================//
+function popUpWindow(content) {
+    const width = 400;
+    const height = 300;
+    const left = (screen.width/2) - (width /2);
+    const top = (screen.height/2) - (height/2);
+    
+// open new centered popup window //
+  const features = `width=${width},height=${height},left=${left},top=${top},resizable=no`;
+
+  const savedTheme = localStorage.getItem('theme');
+  let wallpaper;
+
+  if (savedTheme  === 'dark') wallpaper = './img/alert_wallpaper_dark.jpg';
+    else wallpaper = './img/alert_wallpaper.jpg';
+  
+  console.log(savedTheme);
+
+  // Open a small popup window
+  let newWin = window.open("", "noPostWin", features);
+
+  // Write content + wallpaper background
+  newWin.document.write(`
+  <html>
+    <head>
+      <title>No Posts Yet</title>
+      <style>
+        body {
+          margin: 0;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-family: Arial, sans-serif;
+          background: 
+            linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+            url('${wallpaper}') center/cover no-repeat;
+          color: white;
+        }
+        h2 { font-size: 1.8rem; margin-bottom: 10px; }
+        p { font-size: 1.2rem; }
+        button {
+          margin-top: 20px;
+          padding: 8px 20px;
+          font-size: 1rem;
+          background-color: #16a34a;
+          border: none;
+          border-radius: 8px;
+          color: #fff;
+          cursor: pointer;
+        }
+        button:hover {
+          filter: brightness(0.9);
+        }
+      </style>
+    </head>
+
+    <body>
+      <h3>${content}</h3>
+      <button onclick="window.close()">Close</button>
+    </body>
+  </html>
+  `);
+
+  newWin.document.close();
+  newWin.focus();
+
+  setTimeout(() => {
+    if (!newWin.closed) newWin.close(); 
+  }, 5000);
+}
+
+// ===========================//
+// Print Messages on blog Page//
+// ===========================//
+function printSinglePost(article) {
+  const clonedPost = article.cloneNode(true);
+  clonedPost.querySelectorAll('.blog-edit-icon, .blog-delete-icon').forEach(el => el.remove());
+  const postHTML = clonedPost.outerHTML;
+
+  // ✅ open new tab (so Close button will work)
+  const printWin = window.open('', '_blank');
+
+  printWin.document.write(`<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>Print Post</title>
+      <style>
+        body {
+          background: white;
+          color: black;
+          font-family: Arial, sans-serif;
+          margin: 40px;
+          line-height: 1.6;
+        }
+        .post-title { text-align: center; margin-bottom: 8px; }
+        .post-date  { text-align: center; color: #555; margin-bottom: 16px; }
+        hr { border: 0; border-top: 1px solid #ccc; margin: 20px 0; }
+        .post-content { font-size: 1.1rem; }
+        @media print {
+          body { background: white !important; }
+          .no-print { display: none; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="no-print" style="text-align:right; margin-bottom:16px;">
+        <button onclick="window.print()">Print</button>
+        <button onclick="window.close()">Close</button>
+      </div>
+
+      ${postHTML}
+
+      <script>
+        window.onload = function() { window.print(); };
+      <\/script>
+    </body>
+  </html>`);
+  printWin.document.close();
+  printWin.focus();
 }

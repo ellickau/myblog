@@ -123,7 +123,7 @@ body.dark .blog-post {
 }
 
 /* ===========================
-   New Blog page (test.html)
+   New & Edit Blog page 
    =========================== */
 
  :root {--nav-h: 64px; }
@@ -135,7 +135,7 @@ body.dark .blog-post {
   margin-bottom: 10px;
 }
 
-.new-blog-title h2, .edit-blog-title > h2 {
+.new-blog-title h2, .edit-blog-title h2 {
   margin: 0;
   font-size: clamp(1.8rem, 2.4vw + 1rem, 2.2rem);
   font-weight: 800;
@@ -152,7 +152,7 @@ body.dark .blog-post {
   padding: 24px 24px;
 }
 
-.new-blog-title, .edit-blog-title > h2 {
+.new-blog-title h2, .edit-blog-title h2 {
   text-align: center;
   color: var(--card-title);
 }
@@ -265,3 +265,5 @@ body.dark .new-blog-form .edit-blog-form{
 }
 
 
+.post-title { cursor: pointer; }
+.post-title:hover { text-decoration: underline; }
