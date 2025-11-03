@@ -591,6 +591,7 @@ function editPostedBlog() {
     if (newTitle === originalTitle && newContent === originalContent) {
       msg.textContent = "No changes made. Click 'Blog' back to your Posts.";
       msg.style.color = "red";
+      localStorage.removeItem("pendingEdit");
       return;
     }
 
