@@ -393,7 +393,7 @@ function handleRegister(event)  {
     setTimeout( () => {
       animateLoadersStop();
       if (loader) loader.style.display = "none";
-      window.location.href = "blog.html";
+      window.location.href = "login.html";
     }, 2000);
 };
 
@@ -482,11 +482,11 @@ function handleBlogPage() {
   // Clear rendered posts to prevent duplicates.
   blogContainer.innerHTML = "";
 
-  // check if User not logged in
-  if (!currentUser) {
-    if (blogMessage) blogMessage.textContent = "Please log in to view your posts.";
-    return;
-  }
+  // // check if User not logged in
+  // if (!currentUser) {
+  //   if (blogMessage) blogMessage.textContent = "Please log in to view your posts.";
+  //   return;
+  // }
 
   const allPosts  = loadPosts();
   const posts = allPosts.filter(post => post.username === currentUser && !post.postHidden);
@@ -499,16 +499,16 @@ function handleBlogPage() {
        blogMessage.style.color = "white"; 
     }   
    
-    // usage of document.write() //
-    const msg = "Why not create your first blog ?";
-    popUpWindow(msg);
-    return;    
+    // // usage of document.write() optional //
+    // const msg = "Why not create your first blog ?";
+    // popUpWindow(msg);
+    // return;    
   
   };
 
   blogMessage.style.backgroundColor = "transparent";  
   
-  posts.forEach((post)=> {
+  posts.slice().reverse().forEach((post)=> {
     const article = document.createElement("article");
     article.className ="blog-post";
     article.dataset.id = post.postId;
